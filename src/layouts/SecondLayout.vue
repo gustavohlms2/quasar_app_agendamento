@@ -1,7 +1,6 @@
-
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header style="height: auto; display: flex;" >
+  <q-layout view="lHh Lpr lFf" class="bg-grey-8 text-white">
+    <q-header  style="height: auto; display: flex;" >
 
         <q-img src="../assets/brasaoNovaSerrana.png" ratio="1" width="60px"/>
 
@@ -20,7 +19,7 @@
 
 <script>
 export default {
-  name: 'MainLayout',
+  name: 'SecondLayout',
   data () {}
 }
 </script>
