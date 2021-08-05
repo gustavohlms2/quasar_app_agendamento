@@ -1,5 +1,5 @@
-import { store } from 'quasar/wrappers'
 import { createStore } from 'vuex'
+import apiAgendamento from './module-example'
 
 // import example from './module-example'
 
@@ -12,10 +12,10 @@ import { createStore } from 'vuex'
  * with the Store instance.
  */
 
-export default store(function (/* { ssrContext } */) {
+export default function (/* { ssrContext } */) {
   const Store = createStore({
     modules: {
-      // example
+      apiAgendamento
     },
 
     // enable strict mode (adds overhead!)
@@ -24,4 +24,4 @@ export default store(function (/* { ssrContext } */) {
   })
 
   return Store
-})
+}

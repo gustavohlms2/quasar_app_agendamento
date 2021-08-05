@@ -2,14 +2,49 @@
 const routes = [
   {
     path: '/',
-    component: () => import('layouts/MainLayout.vue'),
+    component: () => import('layouts/IndexLayout.vue'),
     children: [
-      { path: '', name: 'index', component: () => import('pages/Index.vue') },
-      { path: '/agendamento', name: 'agendamento', component: () => import('src/pages/Agendamento.vue') },
-      { path: '/cadastro', name: 'cadastro', component: () => import('src/pages/Cadastro.vue') },
-      { path: '/confirmacao', name: 'confirmacao', component: () => import('src/pages/Confirmacao.vue') },
-      { path: '/consulta', name: 'consulta', component: () => import('src/pages/Consulta.vue') },
-      { path: '/disponibilidade', name: 'disponibilidade', component: () => import('src/pages/Disponibilidade.vue') }
+      { path: '', name: 'index', component: () => import('pages/Index.vue') }
+    ]
+  },
+
+  {
+    path: '/agendamento',
+    component: () => import('layouts/AgendamentoLayout.vue'),
+    children: [
+      { path: '', name: 'agendamento', component: () => import('src/pages/Agendamento.vue') }
+    ]
+  },
+
+  {
+    path: '/cadastro',
+    component: () => import('layouts/CadastroLayout.vue'),
+    children: [
+      { path: '', name: 'cadastro', component: () => import('src/pages/Cadastro.vue') }
+    ]
+  },
+
+  {
+    path: '/confirmacao',
+    component: () => import('layouts/ConfirmacaoLayout.vue'),
+    children: [
+      { path: '', name: 'confirmacao', component: () => import('src/pages/Confirmacao.vue') }
+    ]
+  },
+
+  {
+    path: '/consulta',
+    component: () => import('layouts/ConsultaLayout.vue'),
+    children: [
+      { path: '', name: 'consulta', component: () => import('src/pages/Consulta.vue') }
+    ]
+  },
+
+  {
+    path: '/disponibilidade',
+    component: () => import('layouts/DisponibilidadeLayout.vue'),
+    children: [
+      { path: '', name: 'disponibilidade', component: () => import('src/pages/Disponibilidade.vue') }
     ]
   },
 

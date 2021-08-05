@@ -1,71 +1,113 @@
 <template>
     <div class="q-pa-md row items-start flex-center q-gutter-md">
-        <q-card-actions class="my-card bg-grey-1 col-10 full-width flex flex-center" padding style="height: auto; display: flex;">
+      <div v-if="form.imu_agendamento_vacinacao_ids.length > 0" >
+        <div class="flex-center q-gutter-md">
+          <q-card v-for="agendamento in form.imu_agendamento_vacinacao_ids" :key="agendamento.id">
+            <q-card-section>
+              <div class="row items-start">
+                <q-avatar v-if="agendamento.situacao=='A'" color="secondary" text-color="white">A</q-avatar>
+                <q-avatar v-else color="deep-orange" text-color="yellow">C</q-avatar>
+                <div class="text-h6 q-pa-md"><b>{{agendamento.data_agenda}} {{agendamento.hora_agenda}}</b></div>
+              </div>
+              <div class="text-h6">{{agendamento.nomesquema}}</div>
+              <q-card-actions class="full-width flex flex-center">
+                <q-btn class="q-mx-sm" color="deep-orange" :disabled="agendamento.situacao=='C'" label="Cancelar" @click="confirmaCancelamento(agendamento);" />
+                <q-btn class="q-mx-sm" color="secondary" :disabled="agendamento.situacao=='C'" label="Comprovante" @click="setAgendamentoComprovante(agendamento.id)" />
+              </q-card-actions>
+            </q-card-section>
+          </q-card>
+        </div>
+      </div>
+      <div v-else>
+        <q-card class="col-md-6 col-sm-6 col-xs-6">
+          <q-card-section>
+            <div class="text-h6">Não há agendamentos de vacinação cadastrados.</div>
+          </q-card-section>
+        </q-card>
+      </div>
 
-            <q-img src="../assets/brasaoNovaSerrana.png" ratio="1" height="60px" width="60px"/>
-
-            <q-toolbar-title>
-                22/06/2021 - 07:01
-                <br>
-                Ativos
-            </q-toolbar-title>
-
-        </q-card-actions>
-
-        <q-card-actions class="full-width flex flex-center">
-            <q-btn class="q-mx-sm" color="deep-orange" label="Cancelar" @click="$router.push({ name: 'index' })" style="width: 45%" />
-            <q-btn class="q-mx-sm" align="center" color="secondary" label="Comprovante" @click="confirm = true" style="width: 45%" />
-        </q-card-actions>
-
-        <q-dialog v-model="confirm" persistent>
-            <q-card>
-                <q-card-section class="row items-center">
-                <q-avatar icon="signal_wifi_off" color="primary" text-color="white" />
-                <span class="q-ml-sm">You are currently not connected to any network.</span>
-                </q-card-section>
-
-                <q-card-actions align="right">
-                <q-btn flat label="Cancel" color="primary" v-close-popup />
-                <q-btn flat label="Turn on Wifi" color="primary" v-close-popup />
-                </q-card-actions>
-            </q-card>
-        </q-dialog>
-
+      <div style="margin-top:20px;">
+        <q-page-sticky position="bottom" :offset="[18, 18]" class="full-width flex flex-center">
+          <q-card-actions class="full-width flex flex-center">
+            <q-btn class="q-mx-sm" color="secondary" label="Inicío" @click="$router.push({ name: 'index' })" />
+          </q-card-actions>
+        </q-page-sticky>
+      </div>
     </div>
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
-import axios from 'axios'
+import { computed } from 'vue'
+import { useStore } from 'vuex'
+import urlAPI from '../utilities/urlAPI'
+import { api } from 'boot/axios'
+import { useQuasar } from 'quasar'
 
 export default {
-  name: 'Cadastro',
-  setup () {
-    onMounted(() => {
-      const newUser = {
-        name: this.name,
-        email: this.email,
-        password: this.password
+  name: 'AgendamentoIndex',
+  data () {
+    const $store = useStore()
+    const $q = useQuasar()
+    const imuAgendamentoVacinacao = computed({
+      get: () => $store.state.apiAgendamento.imu_agendamento_vacinacao_id,
+      set: val => {
+        $store.commit('apiAgendamento/updateNewAgendamentos', val)
       }
-      console.log(newUser)
-      // axios.post('http://localhost:5000/signup', newUser)
-      axios.get('https://pokeapi.co/api/v2/pokemon/1')
-        .then(res => {
-          console.log(res.base_experience)
-          this.error = ''
-          this.$router.push('/login')
-        }, err => {
-          console.log(err.response)
-          this.error = err.response.data.error
-          this.$router.push('/login') // comentar
-        })
     })
 
+    function confirmaCancelamento (agendamento) {
+      this.form.agendamento = agendamento
+      $q.dialog({
+        title: 'Alerta',
+        message: 'Deseja confirmar o agendamento?',
+        cancel: true,
+        persistent: true
+      }).onOk(() => {
+        this.form.agendamento.situacao = 'C'
+        api.get(urlAPI.ALTERAAGENDAMENTO, { params: { imu_agendamento_vacinacao_id: this.form.agendamento.id } })
+          .then((res) => {
+            this.$q.notify({
+              message: 'Cadastro atualizado com sucesso',
+              color: 'positive',
+              icon: 'check_circle_outline'
+            })
+          })
+          .catch((err) => { console.log(err) })
+      })
+    }
     return {
-      alert: ref(false),
-      confirm: ref(false),
-      prompt: ref(false),
-      address: ref('')
+      form: {
+        imu_agendamento_vacinacao_ids: [],
+        imu_agendamento_vacinacao_id: null,
+        agendamento: null
+      },
+      imuAgendamentoVacinacao,
+      confirmaCancelamento
+    }
+  },
+  mounted () {
+    this.setAgendamentos()
+  },
+  methods: {
+    setAgendamentos () {
+      const $store = useStore()
+      this.form.imu_agendamento_vacinacao_ids = JSON.parse(JSON.stringify($store.state.apiAgendamento.imu_agendamento_vacinacao_ids))
+    },
+    setAgendamentoComprovante (idAgendamento) {
+      this.imuAgendamentoVacinacao = idAgendamento
+      this.$router.push({ name: 'confirmacao' })
+    },
+    updateSituacaoAgendamento (agendamento) {
+      agendamento.situacao = 'C'
+      this.$axios.get(urlAPI.ALTERAAGENDAMENTO, { params: { imu_agendamento_vacinacao_id: agendamento.id } })
+        .then((res) => {
+          this.$q.notify({
+            message: 'Cadastro atualizado com sucesso',
+            color: 'positive',
+            icon: 'check_circle_outline'
+          })
+        })
+        .catch((err) => { console.log(err) })
     }
   }
 }
