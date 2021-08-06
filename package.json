@@ -6,9 +6,9 @@
   "author": "Gustavo Serafim <gustavohlms2@gmail.com>",
   "private": true,
   "scripts": {
-    "build": "npx quasar build --mode pwa",
+    "build": "quasar build --mode pwa",
     "start": "node server.js",
-    "heroku-postbuild": "npm install --only=dev --no-shrinkwrap && npm run build"
+    "heroku-postbuild": "npm install && npm run build"
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
