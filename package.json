@@ -6,7 +6,7 @@
   "author": "Gustavo Serafim <gustavohlms2@gmail.com>",
   "private": true,
   "scripts": {
-    "build": "quasar build --mode pwa",
+    "build": "npx quasar build --mode pwa",
     "start": "node server.js",
     "heroku-postbuild": "npm install --only=dev --no-shrinkwrap && npm run build"
   },
