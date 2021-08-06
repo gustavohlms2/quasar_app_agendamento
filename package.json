@@ -8,7 +8,7 @@
   "scripts": {
     "build": "quasar build --mode pwa",
     "start": "node server.js",
-    "heroku-postbuild": "yarn && yarn build"
+    "heroku-postbuild": "npm install --only=dev --no-shrinkwrap && npm run build"
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
@@ -47,6 +47,6 @@
   ],
   "engines": {
     "node": ">= 12.22.1",
-    "yarn": ">= 1.21.1"
+    "npm": ">= 6.13.4"
   }
 }
