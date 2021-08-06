@@ -6,9 +6,10 @@
   "author": "Gustavo Serafim <gustavohlms2@gmail.com>",
   "private": true,
   "scripts": {
+    "instalador": "npm install -g @quasar/cli",
     "build": "quasar build --mode pwa",
     "start": "node server.js",
-    "heroku-postbuild": "npm install && npm run build"
+    "heroku-postbuild": "npm install && npm instalador && npm run build"
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
