@@ -6,16 +6,20 @@
   "author": "Gustavo Serafim <gustavohlms2@gmail.com>",
   "private": true,
   "scripts": {
-    "lint": "eslint --ext .js,.vue ./",
-    "test": "echo \"No test specified\" && exit 0"
+    "build": "quasar build --mode pwa",
+    "start": "node server.js",
+    "heroku-postbuild": "yarn && yarn build"
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
     "axios": "^0.21.1",
+    "connect-history-api-fallback": "^1.6.0",
     "core-js": "^3.6.5",
+    "express": "^4.17.1",
     "jspdf": "^2.1.1",
     "qrcode": "^1.4.4",
     "quasar": "^2.0.0",
+    "serve-static": "^1.14.1",
     "vuex": "^4.0.1"
   },
   "devDependencies": {
